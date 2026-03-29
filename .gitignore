@@ -1,0 +1,6 @@
+# 環境変数（APIキーなど機密情報）
+.env
+
+# Pythonキャッシュ
+__pycache__/
+*.pyc
