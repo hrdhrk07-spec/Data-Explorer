@@ -4,16 +4,21 @@ import plotly.express as px
 from typing import Literal, get_args
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 from ai_summary import summarize_dataframe
+from logger import setup_logger
 
-# --- 変数 ---
+# ログ設定
+logging = setup_logger()
+
+# 変数
 ChartType = Literal["散布図", "棒グラフ", "折れ線グラフ"]
 
-# --- 関数 ---
+# 関数
 def load_data(file: UploadedFile) -> pd.DataFrame:
     """CSVを読み込み、基本的なデータクレンジングを行う"""
     try:
         return pd.read_csv(file)
-    except pd.errors.ParserError as e:
+    except Exception as e:
+        logging.error(f"CSVの読み込みエラー: {e}")
         st.error(f"CSVの読み込みに失敗しました: {e}")
         st.stop()
 
@@ -31,7 +36,12 @@ def show_ai_summary(df: pd.DataFrame) -> None:
     """AIによる要約を表示する（戻り値なし）"""
     if st.button("AIによる自動要約を生成"):
         with st.spinner("AIがデータを分析中..."):
-            summary = summarize_dataframe(df)
+            try:
+                summary = summarize_dataframe(df)
+            except Exception as e:
+                logging.error(f"AI要約の生成エラー: {e}")
+                st.error(f"AI要約の生成に失敗しました: {e}")
+                return
         st.info(summary)
 
 def create_plot(df: pd.DataFrame, x: str, y: str, chart_type: ChartType) -> None:
