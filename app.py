@@ -19,7 +19,7 @@ def load_data(file: UploadedFile) -> pd.DataFrame:
         return pd.read_csv(file)
     except Exception as e:
         logging.error(f"CSVの読み込みエラー: {e}")
-        st.error(f"CSVの読み込みに失敗しました: {e}")
+        st.error("CSVの読み込みに失敗しました")
         st.stop()
 
 def show_summary_stats(df: pd.DataFrame) -> None:
@@ -39,9 +39,8 @@ def show_ai_summary(df: pd.DataFrame) -> None:
             try:
                 summary = summarize_dataframe(df)
             except Exception as e:
-                logging.error(f"AI要約の生成エラー: {e}")
-                st.error(f"AI要約の生成に失敗しました: {e}")
-                return
+                st.error("AI要約の生成に失敗しました")
+                st.stop()
         st.info(summary)
 
 def create_plot(df: pd.DataFrame, x: str, y: str, chart_type: ChartType) -> None:
