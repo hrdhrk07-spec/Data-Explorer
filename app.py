@@ -17,6 +17,14 @@ def load_data(file: UploadedFile) -> pd.DataFrame:
     """CSVを読み込み、基本的なデータクレンジングを行う"""
     try:
         return pd.read_csv(file)
+    except pd.errors.EmptyDataError as e:
+        logging.error(f"CSVファイルが空です: {e}")
+        st.error("CSVファイルが空です。内容を確認してください。")
+        st.stop()
+    except pd.errors.ParserError as e:
+        logging.error(f"CSVファイルのパースエラー: {e}")
+        st.error("CSVファイルの形式が正しくありません。内容を確認してください。")
+        st.stop()
     except Exception as e:
         logging.error(f"CSVの読み込みエラー: {e}")
         st.error("CSVの読み込みに失敗しました")
@@ -38,8 +46,8 @@ def show_ai_summary(df: pd.DataFrame) -> None:
         with st.spinner("AIがデータを分析中..."):
             try:
                 summary = summarize_dataframe(df)
-            except Exception as e:
-                st.error("AI要約の生成に失敗しました")
+            except Exception:
+                st.error("AI要約の生成に失敗しました")  # エラーはai_summary.pyでログに記録
                 st.stop()
         st.info(summary)
 
