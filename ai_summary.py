@@ -18,7 +18,7 @@ def summarize_dataframe(df: pd.DataFrame) -> str:
         raise_error(LOG_LEVEL_WARNING, ErrorMessage.DF_EMPTY.value, None, ValueError)
 
     # APIキーの取得
-    gemini_api_key: str = os.getenv("GENAI_API_KEY")
+    gemini_api_key: str = os.getenv("GEMINI_API_KEY")
     if not gemini_api_key:
         raise_error(LOG_LEVEL_ERROR, ErrorMessage.API_KEY_MISSING.value, None, ValueError)
 
@@ -50,12 +50,12 @@ def summarize_dataframe(df: pd.DataFrame) -> str:
         except errors.ClientError as e:
             # API_KEYの誤り、通信エラーやAPIの使用制限などモデルやクライアント側の問題
             # エラー内容はGOOGLE依存であるため、ユーザにも直接見せるように設定
-            raise_error(LOG_LEVEL_ERROR, e.message, None, e)
+            raise_error(LOG_LEVEL_ERROR, str(e), None, RuntimeError)
         except errors.ServerError as e:
             # サーバー側の問題
-            raise_error(LOG_LEVEL_ERROR, e.message, None, e)
+            raise_error(LOG_LEVEL_ERROR, str(e), None, RuntimeError)
         except Exception as e:
             # その他の予期せぬエラー
-            raise_error(LOG_LEVEL_ERROR, e.message, None, e)
+            raise_error(LOG_LEVEL_ERROR, str(e), None, RuntimeError)
 
     return response.text

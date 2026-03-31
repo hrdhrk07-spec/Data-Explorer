@@ -17,5 +17,5 @@ class ErrorMessage(Enum):
     CSV_LOAD_ERROR = "CSVの読み込みに失敗しました。"
     
     DF_EMPTY = "DataFrame が空のため要約できません。"
-    API_KEY_MISSING = "GENAI_API_KEYが環境変数に設定されていません。"
+    API_KEY_MISSING = "GEMINI_API_KEYが環境変数に設定されていません。"
     AI_SUMMARY_FAILED = "AI要約の生成に失敗しました。"

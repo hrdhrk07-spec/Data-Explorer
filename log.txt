@@ -1,8 +1,73 @@
-2026-03-31 10:55:36,617 [ERROR] CSVの読み込みに失敗しました。: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
-2026-03-31 11:00:00,152 [ERROR] GENAI_API_KEYが環境変数に設定されていません。: None
-2026-03-31 14:14:03,631 [ERROR] GENAI_API_KEYが環境変数に設定されていません。
-2026-03-31 14:14:53,032 [ERROR] GENAI_API_KEYが環境変数に設定されていません。
-2026-03-31 14:15:51,558 [ERROR] GENAI_API_KEYが環境変数に設定されていません。
-2026-03-31 14:16:45,018 [ERROR] GENAI_API_KEYが環境変数に設定されていません。
-2026-03-31 14:17:11,721 [ERROR] GENAI_API_KEYが環境変数に設定されていません。
-2026-03-31 14:22:01,543 [ERROR] GENAI_API_KEYが環境変数に設定されていません。
+2026-03-31 14:38:21,850 [INFO] AFC is enabled with max remote calls: 10.
+2026-03-31 14:38:21,853 [DEBUG] connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=None socket_options=None
+2026-03-31 14:38:21,860 [DEBUG] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000238E1DE4C20>
+2026-03-31 14:38:21,860 [DEBUG] start_tls.started ssl_context=<ssl.SSLContext object at 0x00000238E18CD8B0> server_hostname='generativelanguage.googleapis.com' timeout=None
+2026-03-31 14:38:21,876 [DEBUG] start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000238E1D29F90>
+2026-03-31 14:38:21,876 [DEBUG] send_request_headers.started request=<Request [b'POST']>
+2026-03-31 14:38:21,877 [DEBUG] send_request_headers.complete
+2026-03-31 14:38:21,877 [DEBUG] send_request_body.started request=<Request [b'POST']>
+2026-03-31 14:38:21,877 [DEBUG] send_request_body.complete
+2026-03-31 14:38:21,877 [DEBUG] receive_response_headers.started request=<Request [b'POST']>
+2026-03-31 14:38:21,920 [DEBUG] receive_response_headers.complete return_value=(b'HTTP/1.1', 400, b'Bad Request', [(b'Vary', b'Origin'), (b'Vary', b'X-Origin'), (b'Vary', b'Referer'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Content-Encoding', b'gzip'), (b'Date', b'Tue, 31 Mar 2026 05:38:21 GMT'), (b'Server', b'scaffolding on HTTPServer2'), (b'X-XSS-Protection', b'0'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'X-Content-Type-Options', b'nosniff'), (b'Server-Timing', b'gfet4t7; dur=38'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2026-03-31 14:38:21,921 [INFO] HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 400 Bad Request"
+2026-03-31 14:38:21,921 [DEBUG] receive_response_body.started request=<Request [b'POST']>
+2026-03-31 14:38:21,922 [DEBUG] receive_response_body.complete
+2026-03-31 14:38:21,922 [DEBUG] response_closed.started
+2026-03-31 14:38:21,922 [DEBUG] response_closed.complete
+2026-03-31 14:38:35,113 [ERROR] API key not valid. Please pass a valid API key.
+2026-03-31 14:39:09,158 [DEBUG] close.started
+2026-03-31 14:39:09,159 [DEBUG] close.complete
+2026-03-31 14:48:11,562 [INFO] AFC is enabled with max remote calls: 10.
+2026-03-31 14:48:11,566 [DEBUG] connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=None socket_options=None
+2026-03-31 14:48:11,578 [DEBUG] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000203E1DE4C20>
+2026-03-31 14:48:11,578 [DEBUG] start_tls.started ssl_context=<ssl.SSLContext object at 0x00000203E19398B0> server_hostname='generativelanguage.googleapis.com' timeout=None
+2026-03-31 14:48:11,593 [DEBUG] start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000203E1D29F90>
+2026-03-31 14:48:11,594 [DEBUG] send_request_headers.started request=<Request [b'POST']>
+2026-03-31 14:48:11,594 [DEBUG] send_request_headers.complete
+2026-03-31 14:48:11,595 [DEBUG] send_request_body.started request=<Request [b'POST']>
+2026-03-31 14:48:11,595 [DEBUG] send_request_body.complete
+2026-03-31 14:48:11,595 [DEBUG] receive_response_headers.started request=<Request [b'POST']>
+2026-03-31 14:48:11,638 [DEBUG] receive_response_headers.complete return_value=(b'HTTP/1.1', 400, b'Bad Request', [(b'Vary', b'Origin'), (b'Vary', b'X-Origin'), (b'Vary', b'Referer'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Content-Encoding', b'gzip'), (b'Date', b'Tue, 31 Mar 2026 05:48:11 GMT'), (b'Server', b'scaffolding on HTTPServer2'), (b'X-XSS-Protection', b'0'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'X-Content-Type-Options', b'nosniff'), (b'Server-Timing', b'gfet4t7; dur=40'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2026-03-31 14:48:11,639 [INFO] HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 400 Bad Request"
+2026-03-31 14:48:11,640 [DEBUG] receive_response_body.started request=<Request [b'POST']>
+2026-03-31 14:48:11,640 [DEBUG] receive_response_body.complete
+2026-03-31 14:48:11,640 [DEBUG] response_closed.started
+2026-03-31 14:48:11,640 [DEBUG] response_closed.complete
+2026-03-31 14:49:04,384 [INFO] AFC is enabled with max remote calls: 10.
+2026-03-31 14:49:04,387 [DEBUG] connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=None socket_options=None
+2026-03-31 14:49:04,393 [DEBUG] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000014447DF4C20>
+2026-03-31 14:49:04,393 [DEBUG] start_tls.started ssl_context=<ssl.SSLContext object at 0x00000144478D98B0> server_hostname='generativelanguage.googleapis.com' timeout=None
+2026-03-31 14:49:04,406 [DEBUG] start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x0000014447D39F90>
+2026-03-31 14:49:04,407 [DEBUG] send_request_headers.started request=<Request [b'POST']>
+2026-03-31 14:49:04,407 [DEBUG] send_request_headers.complete
+2026-03-31 14:49:04,407 [DEBUG] send_request_body.started request=<Request [b'POST']>
+2026-03-31 14:49:04,408 [DEBUG] send_request_body.complete
+2026-03-31 14:49:04,408 [DEBUG] receive_response_headers.started request=<Request [b'POST']>
+2026-03-31 14:49:04,451 [DEBUG] receive_response_headers.complete return_value=(b'HTTP/1.1', 400, b'Bad Request', [(b'Vary', b'Origin'), (b'Vary', b'X-Origin'), (b'Vary', b'Referer'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Content-Encoding', b'gzip'), (b'Date', b'Tue, 31 Mar 2026 05:49:03 GMT'), (b'Server', b'scaffolding on HTTPServer2'), (b'X-XSS-Protection', b'0'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'X-Content-Type-Options', b'nosniff'), (b'Server-Timing', b'gfet4t7; dur=39'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2026-03-31 14:49:04,452 [INFO] HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 400 Bad Request"
+2026-03-31 14:49:04,453 [DEBUG] receive_response_body.started request=<Request [b'POST']>
+2026-03-31 14:49:04,453 [DEBUG] receive_response_body.complete
+2026-03-31 14:49:04,453 [DEBUG] response_closed.started
+2026-03-31 14:49:04,453 [DEBUG] response_closed.complete
+2026-03-31 14:49:08,943 [ERROR] 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-03-31 14:49:29,960 [DEBUG] close.started
+2026-03-31 14:49:29,961 [DEBUG] close.complete
+2026-03-31 14:56:19,497 [INFO] AFC is enabled with max remote calls: 10.
+2026-03-31 14:56:19,501 [DEBUG] connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=None socket_options=None
+2026-03-31 14:56:19,521 [DEBUG] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000202E44E4C20>
+2026-03-31 14:56:19,521 [DEBUG] start_tls.started ssl_context=<ssl.SSLContext object at 0x00000202E402D8B0> server_hostname='generativelanguage.googleapis.com' timeout=None
+2026-03-31 14:56:19,538 [DEBUG] start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000202E4429F90>
+2026-03-31 14:56:19,538 [DEBUG] send_request_headers.started request=<Request [b'POST']>
+2026-03-31 14:56:19,539 [DEBUG] send_request_headers.complete
+2026-03-31 14:56:19,539 [DEBUG] send_request_body.started request=<Request [b'POST']>
+2026-03-31 14:56:19,539 [DEBUG] send_request_body.complete
+2026-03-31 14:56:19,539 [DEBUG] receive_response_headers.started request=<Request [b'POST']>
+2026-03-31 14:56:19,583 [DEBUG] receive_response_headers.complete return_value=(b'HTTP/1.1', 400, b'Bad Request', [(b'Vary', b'Origin'), (b'Vary', b'X-Origin'), (b'Vary', b'Referer'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Content-Encoding', b'gzip'), (b'Date', b'Tue, 31 Mar 2026 05:56:19 GMT'), (b'Server', b'scaffolding on HTTPServer2'), (b'X-XSS-Protection', b'0'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'X-Content-Type-Options', b'nosniff'), (b'Server-Timing', b'gfet4t7; dur=40'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2026-03-31 14:56:19,584 [INFO] HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 400 Bad Request"
+2026-03-31 14:56:19,585 [DEBUG] receive_response_body.started request=<Request [b'POST']>
+2026-03-31 14:56:19,585 [DEBUG] receive_response_body.complete
+2026-03-31 14:56:19,585 [DEBUG] response_closed.started
+2026-03-31 14:56:19,585 [DEBUG] response_closed.complete
+2026-03-31 14:56:22,797 [ERROR] 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-03-31 14:56:26,336 [DEBUG] close.started
+2026-03-31 14:56:26,337 [DEBUG] close.complete

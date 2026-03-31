@@ -22,7 +22,7 @@ empty_df = pd.DataFrame()
 def test_correct(monkeypatch):
     """DataFrameの統計情報がAIで要約され、文字列が返ること"""
     # テスト実行時だけ環境変数を上書き
-    monkeypatch.setenv("GENAI_API_KEY", "dummy_key_for_test")
+    monkeypatch.setenv("GEMINI_API_KEY", "dummy_key_for_test")
     summary = summarize_dataframe(df)
 
     assert isinstance(summary, str)
@@ -39,14 +39,14 @@ def test_dataframe_empty():
 
 def test_api_key_missing(monkeypatch):
     """APIキーが環境変数に設定されていない場合、ValueErrorが発生すること"""
-    monkeypatch.delenv("GENAI_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     with pytest.raises(ValueError) as exc_info:
         summarize_dataframe(df)
-    assert "GENAI_API_KEY" in str(exc_info.value)
+    assert "GEMINI_API_KEY" in str(exc_info.value)
  
 def test_genai_generate_content_missing(monkeypatch):
     """AI要約の生成に失敗した場合、ConnectionErrorが発生すること"""
-    monkeypatch.setenv("GENAI_API_KEY", "dummy_key")
+    monkeypatch.setenv("GEMINI_API_KEY", "dummy_key")
     with pytest.raises(ConnectionError) as exc_info:
         summarize_dataframe(df)
     assert "AI要約" in str(exc_info.value)
