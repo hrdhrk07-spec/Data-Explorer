@@ -43,13 +43,6 @@ def test_api_key_missing(monkeypatch):
     with pytest.raises(ValueError) as exc_info:
         summarize_dataframe(df)
     assert "GENAI_API_KEY" in str(exc_info.value)
-
-# genai.Clientの初期化の失敗についてはテストは省略する。
-# 理由は発生頻度が少ないと思われるため。
-# 1.APIキーの値が空・None・不正
-# 2.ライブラリが古い・間違っている（google-generativeaiと間違えているケース）
-# という2ケースで発生するが、1のケースは多いと考え事前にチェックするようにしている。
-# 2は発生する可能性があるが、ライブラリを正しくインストールしていれば発生しないため。
  
 def test_genai_generate_content_missing(monkeypatch):
     """AI要約の生成に失敗した場合、ConnectionErrorが発生すること"""

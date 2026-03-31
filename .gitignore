@@ -4,3 +4,6 @@
 # Pythonキャッシュ
 __pycache__/
 *.pyc
+
+# Pytestのキャッシュ
+.pytest_cache/

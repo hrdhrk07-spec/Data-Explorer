@@ -1,13 +1,20 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import logging
+from constants import ErrorMessage
 from typing import Literal, get_args
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 from ai_summary import summarize_dataframe
-from logger import setup_logger
+from utils import handle_error
 
-# ログ設定
-logging = setup_logger()
+# ログ初期設定（全体で一度だけ呼びだせばよい）
+logging.basicConfig(
+        filename="log.txt",
+        level=logging.DEBUG,
+        encoding="utf-8",
+        format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 # 変数
 ChartType = Literal["散布図", "棒グラフ", "折れ線グラフ"]
@@ -18,17 +25,11 @@ def load_data(file: UploadedFile) -> pd.DataFrame:
     try:
         return pd.read_csv(file)
     except pd.errors.EmptyDataError as e:
-        logging.error(f"CSVファイルが空です: {e}")
-        st.error("CSVファイルが空です。内容を確認してください。")
-        st.stop()
+        handle_error(ErrorMessage.CSV_EMPTY.value, e)
     except pd.errors.ParserError as e:
-        logging.error(f"CSVファイルのパースエラー: {e}")
-        st.error("CSVファイルの形式が正しくありません。内容を確認してください。")
-        st.stop()
+        handle_error(ErrorMessage.CSV_PARSE_ERROR.value, e)
     except Exception as e:
-        logging.error(f"CSVの読み込みエラー: {e}")
-        st.error("CSVの読み込みに失敗しました")
-        st.stop()
+        handle_error(ErrorMessage.CSV_LOAD_ERROR.value, e)
 
 def show_summary_stats(df: pd.DataFrame) -> None:
     """統計情報を表示する（戻り値なし）"""
@@ -46,9 +47,9 @@ def show_ai_summary(df: pd.DataFrame) -> None:
         with st.spinner("AIがデータを分析中..."):
             try:
                 summary = summarize_dataframe(df)
-            except Exception:
-                st.error("AI要約の生成に失敗しました")  # エラーはai_summary.pyでログに記録
-                st.stop()
+            except Exception as e:
+                # エラーはai_summary.pyでログに記録済みなので、ユーザーへの通知のみ
+                handle_error(ErrorMessage.AI_SUMMARY_FAILED.value, e, log=False)
         st.info(summary)
 
 def create_plot(df: pd.DataFrame, x: str, y: str, chart_type: ChartType) -> None:
