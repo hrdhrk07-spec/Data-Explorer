@@ -67,8 +67,8 @@ def create_plot(df: pd.DataFrame, x: str, y: str, chart_type: ChartType) -> None
 # --- メイン処理 ---
 
 def main() -> None:
-    st.set_page_config(page_title="Smart Data Explorer", layout="wide")
-    st.title("📊 Smart Data Explorer")
+    st.set_page_config(page_title="Data Explorer", layout="wide")
+    st.title("📊 Data Explorer")
 
     uploaded_file: UploadedFile | None = st.file_uploader(
         "CSVファイルを選択してください", type="csv"
