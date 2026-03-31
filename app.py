@@ -25,11 +25,11 @@ def load_data(file: UploadedFile) -> pd.DataFrame:
     try:
         return pd.read_csv(file)
     except pd.errors.EmptyDataError as e:
-        handle_error(ErrorMessage.CSV_EMPTY.value, e)
+        handle_error(ErrorMessage.CSV_EMPTY.value, str(e))
     except pd.errors.ParserError as e:
-        handle_error(ErrorMessage.CSV_PARSE_ERROR.value, e)
+        handle_error(ErrorMessage.CSV_PARSE_ERROR.value, str(e))
     except Exception as e:
-        handle_error(ErrorMessage.CSV_LOAD_ERROR.value, e)
+        handle_error(ErrorMessage.CSV_LOAD_ERROR.value, str(e))
 
 def show_summary_stats(df: pd.DataFrame) -> None:
     """統計情報を表示する（戻り値なし）"""
@@ -49,7 +49,8 @@ def show_ai_summary(df: pd.DataFrame) -> None:
                 summary = summarize_dataframe(df)
             except Exception as e:
                 # エラーはai_summary.pyでログに記録済みなので、ユーザーへの通知のみ
-                handle_error(ErrorMessage.AI_SUMMARY_FAILED.value, e, log=False)
+                # AI要約の失敗時はユーザにもエラーメッセージを表示し、処理を停止する。
+                handle_error(f"{ErrorMessage.AI_SUMMARY_FAILED.value}: {str(e)}", "", log=False)
         st.info(summary)
 
 def create_plot(df: pd.DataFrame, x: str, y: str, chart_type: ChartType) -> None:

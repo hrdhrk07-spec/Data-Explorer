@@ -3,6 +3,7 @@ import pandas as pd
 from constants import LOG_LEVEL_WARNING, LOG_LEVEL_ERROR, AI_MODEL, ErrorMessage
 from utils import raise_error
 from google import genai
+from google.genai import errors
 from dotenv import load_dotenv
 
 # 環境変数の読み込み
@@ -46,8 +47,15 @@ def summarize_dataframe(df: pd.DataFrame) -> str:
                 {stats_text}
                 """
             )
+        except errors.ClientError as e:
+            # API_KEYの誤り、通信エラーやAPIの使用制限などモデルやクライアント側の問題
+            # エラー内容はGOOGLE依存であるため、ユーザにも直接見せるように設定
+            raise_error(LOG_LEVEL_ERROR, e.message, None, e)
+        except errors.ServerError as e:
+            # サーバー側の問題
+            raise_error(LOG_LEVEL_ERROR, e.message, None, e)
         except Exception as e:
-            # APIを叩いているため、API_KEYの誤り、通信エラーやAPIの使用制限である可能性が高い
-            raise_error(LOG_LEVEL_ERROR, ErrorMessage.AI_SUMMARY_FAILED.value, e, ConnectionError)
-    
+            # その他の予期せぬエラー
+            raise_error(LOG_LEVEL_ERROR, e.message, None, e)
+
     return response.text
