@@ -4,6 +4,9 @@
 
 import pandas as pd
 import pytest
+from unittest.mock import MagicMock, patch
+from google import genai
+from google.genai import errors
 from ai_summary import summarize_dataframe
 
 # テスト用のサンプルDataFrame
@@ -19,10 +22,8 @@ empty_df = pd.DataFrame()
 # ------------------------------------------------------------------
 # 正常系
 # ------------------------------------------------------------------
-def test_correct(monkeypatch):
+def test_correct():
     """DataFrameの統計情報がAIで要約され、文字列が返ること"""
-    # テスト実行時だけ環境変数を上書き
-    monkeypatch.setenv("GEMINI_API_KEY", "dummy_key_for_test")
     summary = summarize_dataframe(df)
 
     assert isinstance(summary, str)
@@ -44,9 +45,33 @@ def test_api_key_missing(monkeypatch):
         summarize_dataframe(df)
     assert "GEMINI_API_KEY" in str(exc_info.value)
  
-def test_genai_generate_content_missing(monkeypatch):
-    """AI要約の生成に失敗した場合、ConnectionErrorが発生すること"""
+def test_generate_content_api_key_invalid(monkeypatch):
+    """APIキーに誤りがある場合、ClientErrorが発生すること"""
     monkeypatch.setenv("GEMINI_API_KEY", "dummy_key")
-    with pytest.raises(ConnectionError) as exc_info:
+    with pytest.raises(RuntimeError) as exc_info:
         summarize_dataframe(df)
-    assert "AI要約" in str(exc_info.value)
+    assert "API" in str(exc_info.value)
+
+def test_generate_content_server_error():
+    """サーバーエラーが発生した場合、ClientErrorが発生すること"""
+
+    # clientのモックを作成
+    mock_client = MagicMock()
+
+    # generate_content を呼ぶと ServerError が発生するよう設定
+    mock_client.models.generate_content.side_effect = errors.ServerError(
+        500,
+        {"error": {"code": 500, "message": "Internal error", "status": "INTERNAL"}},
+    )
+
+    # with文では__enter__の戻り値をモックに設定する必要がある
+    mock_context = MagicMock()
+    mock_context.__enter__ = MagicMock(return_value=mock_client)
+    mock_context.__exit__ = MagicMock(return_value=False) # 例外を握り潰さない、省略可能
+
+    # genai.Client(...)の戻り値をmock_clientに差し替える
+    with patch("ai_summary.genai.Client", return_value=mock_context):
+        with pytest.raises(RuntimeError) as exc_info:
+            summarize_dataframe(df)
+          
+    assert "Internal" in str(exc_info.value)

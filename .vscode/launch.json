@@ -17,6 +17,19 @@
                 "false"
             ],  
             "console": "integratedTerminal"
+        },
+
+        {
+            "name": "Debug pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "-k", "test_ai_summary.py"   
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
+
     ]
 }

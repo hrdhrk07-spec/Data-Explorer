@@ -61,6 +61,13 @@ def test_empty_file_raises():
  
     with pytest.raises(pd.errors.EmptyDataError):
         pd.read_csv(csv)
+
+def test_error_file_raises():
+    """エラーファイルは pd.errors.ParserError になること"""
+    csv = make_csv("a,b,c\n1,2\n3,4,5,6") # 列数が行ごとにバラバラ
+ 
+    with pytest.raises(pd.errors.ParserError):
+        pd.read_csv(csv)
  
 def test_header_only():
     """
