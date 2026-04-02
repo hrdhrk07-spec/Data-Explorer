@@ -121,17 +121,17 @@ def main() -> None:
             # --- 統計情報の表示 ---
             show_summary_stats(df)
 
-            # --- 異常値ハイライト ---
-            st.subheader("🔴 異常値ハイライト（IQR法）")
+            # --- 外れ値ハイライト ---
+            st.subheader("🔴 外れ値ハイライト（IQR法）")
 
             # 外れ値フラグ表の作成と集計
             outlier_flags: pd.DataFrame = detect_outliers(df)
             outlier_count: int = outlier_flags.sum().sum()
 
             if outlier_count == 0:
-                st.success("異常値は検出されませんでした。")
+                st.success("外れ値は検出されませんでした。")
             else:
-                st.warning(f"{outlier_count} 件の異常値が検出されました。")
+                st.warning(f"{outlier_count} 件の外れ値が検出されました。")
                 st.dataframe(
                     build_highlight_styles(df, outlier_flags)
                 )
