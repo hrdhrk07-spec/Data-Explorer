@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import logging
-from constants import ErrorMessage
+from constants import ErrorMessage, HIGHLIGHT_COLOR
 from typing import Literal, get_args
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 from ai_summary import summarize_dataframe
@@ -41,6 +41,42 @@ def show_summary_stats(df: pd.DataFrame) -> None:
         st.subheader("欠損値の確認")
         st.write(df.isnull().sum())
 
+def detect_outliers(df: pd.DataFrame) -> pd.DataFrame:
+    """IQR法で数値列の外れ値フラグを返す"""
+
+    # 引数と同じ形のDataFrameを作り、全てのセルをFalseで初期化
+    outlier_flags = pd.DataFrame(False, index=df.index, columns=df.columns)
+    
+    # 引数のDataFrameの数値列のみを取り出し、列名一覧を取得
+    numeric_cols = df.select_dtypes(include="number").columns
+
+    for col in numeric_cols:
+
+        # 第1四分位数 (Q1) と 第3四分位数 (Q3) を計算
+        q1 = df[col].quantile(0.25)
+        q3 = df[col].quantile(0.75)
+
+        # IQR（四分位範囲）を計算
+        iqr = q3 - q1
+
+        # 下限と上限を設定
+        lower = q1 - 1.5 * iqr
+        upper = q3 + 1.5 * iqr
+
+        # 下限または上限を外れたデータをTrueとするフラグを立てる
+        outlier_flags[col] = (df[col] < lower) | (df[col] > upper)
+
+    return outlier_flags
+
+def build_highlight_styles(df: pd.DataFrame, outlier_flags: pd.DataFrame) -> pd.DataFrame:
+    """外れ値セルにCSSスタイルを付与したDataFrameを返す"""
+    return df.style.apply(
+        lambda col: outlier_flags[col.name].map(
+            lambda flag: f"background-color: {HIGHLIGHT_COLOR}" if flag else ""
+        ),
+        axis=0,
+    )
+
 def show_ai_summary(df: pd.DataFrame) -> None:
     """AIによる要約を表示する（戻り値なし）"""
     if st.button("AIによる自動要約を生成"):
@@ -75,14 +111,32 @@ def main() -> None:
     )
 
     if uploaded_file is not None:
-        df: pd.DataFrame = load_data(uploaded_file)
-        
+        df: pd.DataFrame = load_data(uploaded_file)       
         tab1, tab2 = st.tabs(["📋 データ概要", "📈 可視化分析"])
 
         with tab1:
             st.subheader("データプレビュー")
             st.dataframe(df.head())
+
+            # --- 統計情報の表示 ---
             show_summary_stats(df)
+
+            # --- 異常値ハイライト ---
+            st.subheader("🔴 異常値ハイライト（IQR法）")
+
+            # 外れ値フラグ表の作成と集計
+            outlier_flags: pd.DataFrame = detect_outliers(df)
+            outlier_count: int = outlier_flags.sum().sum()
+
+            if outlier_count == 0:
+                st.success("異常値は検出されませんでした。")
+            else:
+                st.warning(f"{outlier_count} 件の異常値が検出されました。")
+                st.dataframe(
+                    build_highlight_styles(df, outlier_flags)
+                )
+
+            # --- AI要約 ---
             show_ai_summary(df)
 
         with tab2:
@@ -92,6 +146,7 @@ def main() -> None:
             y_axis: str = st.selectbox("Y軸を選択", cols)
             c_type: ChartType = st.radio("グラフの種類", get_args(ChartType))
             
+            # --- グラフの作成と表示 ---
             create_plot(df, x_axis, y_axis, c_type)
 
 if __name__ == "__main__":
