@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import logging
-from constants import ErrorMessage, HIGHLIGHT_COLOR
+from constants import ErrorMessage, HIGHLIGHT_OUTLIER, HIGHLIGHT_MISSING
 from typing import Literal, get_args
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 from ai_summary import summarize_dataframe
@@ -68,14 +68,20 @@ def detect_outliers(df: pd.DataFrame) -> pd.DataFrame:
 
     return outlier_flags
 
-def build_highlight_styles(df: pd.DataFrame, outlier_flags: pd.DataFrame) -> pd.DataFrame:
-    """外れ値セルにCSSスタイルを付与したDataFrameを返す"""
-    return df.style.apply(
-        lambda col: outlier_flags[col.name].map(
-            lambda flag: f"background-color: {HIGHLIGHT_COLOR}" if flag else ""
-        ),
-        axis=0,
-    )
+def build_highlight_styles(df: pd.DataFrame, outlier_flags: pd.DataFrame, missing_flags: pd.DataFrame) -> pd.Styler:
+    """外れ値セルにCSSスタイルを付与したStylerを返す"""
+    def highlight(col: pd.Series) -> list[str]:
+        styles = []
+        for i in col.index:
+            if outlier_flags.loc[i, col.name]:
+                styles.append(f"background-color: {HIGHLIGHT_OUTLIER}")
+            elif missing_flags.loc[i, col.name]:
+                styles.append(f"background-color: {HIGHLIGHT_MISSING}")
+            else:
+                styles.append("")
+        return styles
+    # apply()は axis=0 の場合列ごとに関数を呼び出す
+    return df.style.apply(highlight, axis=0)
 
 def show_ai_summary(df: pd.DataFrame) -> None:
     """AIによる要約を表示する（戻り値なし）"""
@@ -121,19 +127,24 @@ def main() -> None:
             # --- 統計情報の表示 ---
             show_summary_stats(df)
 
-            # --- 外れ値ハイライト ---
-            st.subheader("🔴 外れ値ハイライト（IQR法）")
+            # --- 外れ値・欠損値ハイライト ---
+            st.subheader("🔴 外れ値（IQR法）・欠損値ハイライト")
 
-            # 外れ値フラグ表の作成と集計
+            # 外れ値・欠損値フラグ表の作成と集計
             outlier_flags: pd.DataFrame = detect_outliers(df)
+            missing_flags: pd.DataFrame = df.isnull()
             outlier_count: int = outlier_flags.sum().sum()
+            missing_count: int = missing_flags.sum().sum()
 
-            if outlier_count == 0:
-                st.success("外れ値は検出されませんでした。")
+            if outlier_count == 0 and missing_count == 0:
+                st.success("外れ値・欠損値は検出されませんでした。")
             else:
-                st.warning(f"{outlier_count} 件の外れ値が検出されました。")
+                if outlier_count > 0:
+                    st.warning(f"外れ値が {outlier_count} 件検出されました。")
+                if missing_count > 0:
+                    st.warning(f"欠損値が {missing_count} 件検出されました。")  
                 st.dataframe(
-                    build_highlight_styles(df, outlier_flags)
+                    build_highlight_styles(df, outlier_flags, missing_flags)
                 )
 
             # --- AI要約 ---

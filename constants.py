@@ -3,7 +3,8 @@ from enum import Enum
 
 # 定数
 AI_MODEL: str = "gemini-2.5-flash"
-HIGHLIGHT_COLOR: str = "#cc4444"
+HIGHLIGHT_OUTLIER: str = "#E0AC00"
+HIGHLIGHT_MISSING: str = "#cc4444"
 
 # ログレベル
 LOG_LEVEL_DEBUG = 10
