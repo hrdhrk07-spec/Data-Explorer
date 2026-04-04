@@ -38,10 +38,10 @@ def test_correct(test_df):
 # 異常系
 # ------------------------------------------------------------------ 
 def test_dataframe_empty(empty_df):
-    """空のDataFrameが渡された場合、ValueErrorが発生すること"""
+    """空データが渡された場合、ValueErrorが発生すること"""
     with pytest.raises(ValueError) as exc_info:
         summarize_dataframe(empty_df)
-    assert "DataFrame" in str(exc_info.value)
+    assert "空データ" in str(exc_info.value)
 
 def test_api_key_missing(monkeypatch, test_df):
     """APIキーが環境変数に設定されていない場合、ValueErrorが発生すること"""

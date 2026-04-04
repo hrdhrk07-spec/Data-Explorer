@@ -25,7 +25,7 @@
             "request": "launch",
             "module": "pytest",
             "args": [
-                "-k", "test_ai_summary.py"   
+                "-k", "test_app.py"   
             ],
             "console": "integratedTerminal",
             "justMyCode": true

@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import logging
-from constants import ErrorMessage, HIGHLIGHT_OUTLIER, HIGHLIGHT_MISSING
+from constants import ErrorMessage, Dropdown_Missing, Dropdown_Outlier, HIGHLIGHT_OUTLIER, HIGHLIGHT_MISSING
 from typing import Literal, get_args
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 from ai_summary import summarize_dataframe
@@ -41,6 +41,15 @@ def show_summary_stats(df: pd.DataFrame) -> None:
         st.subheader("欠損値の確認")
         st.write(df.isnull().sum())
 
+def compute_iqr_bounds(series: pd.Series) -> tuple[float, float]:
+    """IQR法でlower/upperの境界値を返す。"""
+    q1 = series.quantile(0.25)
+    q3 = series.quantile(0.75)
+    iqr = q3 - q1
+    lower = q1 - 1.5 * iqr
+    upper = q3 + 1.5 * iqr
+    return lower, upper
+
 def detect_outliers(df: pd.DataFrame) -> pd.DataFrame:
     """IQR法で数値列の外れ値フラグを返す"""
 
@@ -52,16 +61,8 @@ def detect_outliers(df: pd.DataFrame) -> pd.DataFrame:
 
     for col in numeric_cols:
 
-        # 第1四分位数 (Q1) と 第3四分位数 (Q3) を計算
-        q1 = df[col].quantile(0.25)
-        q3 = df[col].quantile(0.75)
-
-        # IQR（四分位範囲）を計算
-        iqr = q3 - q1
-
-        # 下限と上限を設定
-        lower = q1 - 1.5 * iqr
-        upper = q3 + 1.5 * iqr
+        # 列ごとにIQRの境界値を計算
+        lower, upper = compute_iqr_bounds(df[col])
 
         # 下限または上限を外れたデータをTrueとするフラグを立てる
         outlier_flags[col] = (df[col] < lower) | (df[col] > upper)
@@ -82,6 +83,43 @@ def build_highlight_styles(df: pd.DataFrame, outlier_flags: pd.DataFrame, missin
         return styles
     # apply()は axis=0 の場合列ごとに関数を呼び出す
     return df.style.apply(highlight, axis=0)
+
+def apply_missing_strategy(df: pd.DataFrame, strategy: str) -> pd.DataFrame:
+    """欠損値を指定した方法で処理する。"""
+    if strategy == Dropdown_Missing.ROW_DROP.value:
+        return df.dropna()
+    elif strategy == Dropdown_Missing.MEAN_FILL.value:
+        return df.fillna(df.mean(numeric_only=True))
+    elif strategy == Dropdown_Missing.ZERO_FILL.value:
+        num_cols = df.select_dtypes(include="number").columns
+        str_cols = df.select_dtypes(include="object").columns
+        df[num_cols] = df[num_cols].fillna(0)
+        df[str_cols] = df[str_cols].fillna("Missing")
+        return df
+    return df  # "処理しない" の場合はそのまま返す
+
+def apply_outlier_strategy(df: pd.DataFrame, strategy: str) -> pd.DataFrame:
+    """外れ値を指定した方法で処理する（数値列のみ）。"""
+    if strategy == Dropdown_Outlier.ROW_DROP.value:
+        # 欠損値を加工している可能性があるため、外れ値フラグを再度取得
+        outlier_flags_new = detect_outliers(df)
+        # 1行でも外れ値があればTrueとなるマスクを作成
+        mask = outlier_flags_new.any(axis=1)
+        # 外れ値が無い行を抽出し、インデックスを振り直す
+        return df[~mask].reset_index(drop=True) 
+    elif strategy == Dropdown_Outlier.IQR_CLIP.value:
+        df = df.copy()
+        for col in df.select_dtypes(include="number").columns:
+            # 列ごとにIQRの境界値を計算
+            lower, upper = compute_iqr_bounds(df[col])
+            # 下限を下回る値はlowerに、上限を上回る値はupperに置き換える
+            df[col] = df[col].clip(lower=lower, upper=upper)
+        return df
+    return df # "処理しない" の場合はそのまま返す
+
+def convert_df_to_csv(df: pd.DataFrame) -> bytes:
+    """DataFrameをCSVのバイト列に変換する。"""
+    return df.to_csv(index=False).encode("utf-8-sig")  # Excel対応のBOM付きUTF-8
 
 def show_ai_summary(df: pd.DataFrame) -> None:
     """AIによる要約を表示する（戻り値なし）"""
@@ -146,6 +184,35 @@ def main() -> None:
                 st.dataframe(
                     build_highlight_styles(df, outlier_flags, missing_flags)
                 )
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                missing_strategy = st.selectbox(
+                    "欠損値の処理",
+                    [strategy.value for strategy in Dropdown_Missing],
+                )
+            with col2:
+                outlier_strategy = st.selectbox(
+                    "外れ値の処理",
+                    [strategy.value for strategy in Dropdown_Outlier],
+                )
+
+            # --- データ加工 ---
+            df_processed = apply_missing_strategy(df, missing_strategy)
+            # 外れ値処理は欠損値処理の後に行う。欠損値処理でデータの削除・補完をすることで外れ値の判定が変わる可能性があるため。
+            df_processed = apply_outlier_strategy(df_processed, outlier_strategy)
+
+            # --- 加工後の行数表示 ---
+            st.caption(f"加工後の行数：{len(df_processed)} 行（元データ：{len(df)} 行）")
+
+            # --- 加工後CSVのダウンロード ---
+            csv_bytes = convert_df_to_csv(df_processed)
+            st.download_button(
+                label="📥 データ加工済みCSVをダウンロード",
+                data=csv_bytes,
+                file_name="data_processed.csv",
+                mime="text/csv",
+            )
 
             # --- AI要約 ---
             show_ai_summary(df)

@@ -71,3 +71,4 @@
 2026-03-31 14:56:22,797 [ERROR] 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
 2026-03-31 14:56:26,336 [DEBUG] close.started
 2026-03-31 14:56:26,337 [DEBUG] close.complete
+2026-04-04 12:59:29,102 [WARNING] DataFrame が空のため要約できません。
