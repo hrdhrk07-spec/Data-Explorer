@@ -21,7 +21,7 @@ ChartType = Literal["散布図", "棒グラフ", "折れ線グラフ"]
 
 # 関数
 def load_data(file: UploadedFile) -> pd.DataFrame:
-    """CSVを読み込み、基本的なデータクレンジングを行う"""
+    """CSV読み込み"""
     try:
         return pd.read_csv(file)
     except pd.errors.EmptyDataError as e:
@@ -42,7 +42,7 @@ def show_summary_stats(df: pd.DataFrame) -> None:
         st.write(df.isnull().sum())
 
 def compute_iqr_bounds(series: pd.Series) -> tuple[float, float]:
-    """IQR法でlower/upperの境界値を返す。"""
+    """IQR法で下限・上限の境界値を返す"""
     q1 = series.quantile(0.25)
     q3 = series.quantile(0.75)
     iqr = q3 - q1
@@ -85,7 +85,7 @@ def build_highlight_styles(df: pd.DataFrame, outlier_flags: pd.DataFrame, missin
     return df.style.apply(highlight, axis=0)
 
 def apply_missing_strategy(df: pd.DataFrame, strategy: str) -> pd.DataFrame:
-    """欠損値を指定した方法で処理する。"""
+    """欠損値を指定した方法で処理する"""
     if strategy == Dropdown_Missing.ROW_DROP.value:
         return df.dropna()
     elif strategy == Dropdown_Missing.MEAN_FILL.value:
@@ -99,7 +99,7 @@ def apply_missing_strategy(df: pd.DataFrame, strategy: str) -> pd.DataFrame:
     return df  # "処理しない" の場合はそのまま返す
 
 def apply_outlier_strategy(df: pd.DataFrame, strategy: str) -> pd.DataFrame:
-    """外れ値を指定した方法で処理する（数値列のみ）。"""
+    """外れ値を指定した方法で処理する（数値列のみ）"""
     if strategy == Dropdown_Outlier.ROW_DROP.value:
         # 欠損値を加工している可能性があるため、外れ値フラグを再度取得
         outlier_flags_new = detect_outliers(df)
@@ -118,7 +118,7 @@ def apply_outlier_strategy(df: pd.DataFrame, strategy: str) -> pd.DataFrame:
     return df # "処理しない" の場合はそのまま返す
 
 def convert_df_to_csv(df: pd.DataFrame) -> bytes:
-    """DataFrameをCSVのバイト列に変換する。"""
+    """DataFrameをCSVのバイト列に変換する"""
     return df.to_csv(index=False).encode("utf-8-sig")  # Excel対応のBOM付きUTF-8
 
 def show_ai_summary(df: pd.DataFrame) -> None:
