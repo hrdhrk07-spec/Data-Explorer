@@ -72,3 +72,21 @@
 2026-03-31 14:56:26,336 [DEBUG] close.started
 2026-03-31 14:56:26,337 [DEBUG] close.complete
 2026-04-04 12:59:29,102 [WARNING] DataFrame が空のため要約できません。
+2026-04-07 15:14:49,753 [INFO] AFC is enabled with max remote calls: 10.
+2026-04-07 15:14:49,754 [DEBUG] connect_tcp.started host='generativelanguage.googleapis.com' port=443 local_address=None timeout=None socket_options=None
+2026-04-07 15:14:49,812 [DEBUG] connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000236947AEF90>
+2026-04-07 15:14:49,812 [DEBUG] start_tls.started ssl_context=<ssl.SSLContext object at 0x0000023694710EF0> server_hostname='generativelanguage.googleapis.com' timeout=None
+2026-04-07 15:14:49,830 [DEBUG] start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x00000236947B39D0>
+2026-04-07 15:14:49,831 [DEBUG] send_request_headers.started request=<Request [b'POST']>
+2026-04-07 15:14:49,831 [DEBUG] send_request_headers.complete
+2026-04-07 15:14:49,831 [DEBUG] send_request_body.started request=<Request [b'POST']>
+2026-04-07 15:14:49,831 [DEBUG] send_request_body.complete
+2026-04-07 15:14:49,831 [DEBUG] receive_response_headers.started request=<Request [b'POST']>
+2026-04-07 15:14:57,873 [DEBUG] receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'X-Gemini-Service-Tier', b'standard'), (b'Content-Type', b'application/json; charset=UTF-8'), (b'Vary', b'Origin'), (b'Vary', b'X-Origin'), (b'Vary', b'Referer'), (b'Content-Encoding', b'gzip'), (b'Date', b'Tue, 07 Apr 2026 06:14:55 GMT'), (b'Server', b'scaffolding on HTTPServer2'), (b'X-XSS-Protection', b'0'), (b'X-Frame-Options', b'SAMEORIGIN'), (b'X-Content-Type-Options', b'nosniff'), (b'Server-Timing', b'gfet4t7; dur=8031'), (b'Alt-Svc', b'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000'), (b'Transfer-Encoding', b'chunked')])
+2026-04-07 15:14:57,874 [INFO] HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-04-07 15:14:57,874 [DEBUG] receive_response_body.started request=<Request [b'POST']>
+2026-04-07 15:14:57,874 [DEBUG] receive_response_body.complete
+2026-04-07 15:14:57,874 [DEBUG] response_closed.started
+2026-04-07 15:14:57,874 [DEBUG] response_closed.complete
+2026-04-07 15:14:57,875 [DEBUG] close.started
+2026-04-07 15:14:57,876 [DEBUG] close.complete
